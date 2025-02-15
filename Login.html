@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Sign-Up</title>
+    <style>
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+        }
+
+        /* Container */
+        .form-container {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Heading */
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        /* Input Fields */
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-container input:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+
+        /* Button Styling */
+        .form-container button {
+            background-color: #6e8efb;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #5a75d6;
+        }
+
+        /* Toggle Link */
+        .form-container .toggle-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-container .toggle-link a {
+            color: #6e8efb;
+            text-decoration: none;
+        }
+
+        .form-container .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2>Login</h2>
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p class="toggle-link">Don't have an account? <a href="#" onclick="showSignUp()">Sign up</a></p>
+        </div>
+
+        <!-- Sign-Up Form -->
+        <div id="signupForm" style="display: none;">
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="Full Name" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="text" id="signupAddress" placeholder="Address" required>
+            <input type="tel" id="signupContact" placeholder="Contact No" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <button onclick="signup()">Sign Up</button>
+            <p class="toggle-link">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between Login and Sign-Up forms
+        function showSignUp() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        }
+
+        // Dummy user database (for localStorage)
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Sign-Up Function
+        function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const address = document.getElementById('signupAddress').value;
+            const contact = document.getElementById('signupContact').value;
+            const password = document.getElementById('signupPassword').value;
+
+            // Check if user already exists
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert("User already exists. Please log in.");
+                showLogin();
+                return;
+            }
+
+            // Save new user
+            users.push({ name, email, address, contact, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert("Account created successfully! Please log in.");
+            showLogin();
+        }
+
+        // Login Function
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Validate user credentials
+            const user = users.find(user => user.email === email && user.password === password);
+            if (user) {
+                alert(`Welcome back, ${user.name}!`);
+                window.location.href = "index.html"; // Redirect to homepage
+            } else {
+                alert("Invalid email or password. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
+<!-- Compare this snippet from index.html: -->

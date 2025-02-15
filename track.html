@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Retention Monitoring</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    form {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result, .recommendation {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #007bff;
+    }
+    
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+        <nav>
+            <ul>
+                <li><a href="index.html" target=>Home</a></li>
+                <li><a href="track.html"target=>Track Wastage</a></li>
+                <li><a href="about.html" class="active">About Us</a></li>
+                <li><a href="features.html"target=>Track Wastage</a></li>
+                <li><a href="contact.html"target=>Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+    <div class="container">
+        <h1>Water Retention Structure Management</h1>
+
+        <form id="predictionForm">
+            <label for="temperature">Temperature (°C):</label>
+            <input type="number" id="temperature" name="temperature" step="0.1" required>
+
+            <label for="rainfall">Rainfall (mm):</label>
+            <input type="number" id="rainfall" name="rainfall" step="0.1" required>
+
+            <label for="geographicalArea">Geographical Area:</label>
+            <select id="geographicalArea" name="geographicalArea" required>
+                <option value="">--Select--</option>
+                <option value="urban">Urban</option>
+                <option value="rural">Rural</option>
+                <option value="coastal">Coastal</option>
+                <option value="arid">Arid</option>
+            </select>
+
+            <label for="retentionCapacity">Retention Capacity (liters):</label>
+            <input type="number" id="retentionCapacity" name="retentionCapacity" step="0.1" required>
+
+            <button type="button" onclick="predictWaterWastage()">Predict</button>
+        </form>
+
+        <div id="output" class="output" style="display: none;">
+            <h3>Prediction Result</h3>
+            <p id="predictionMessage"></p>
+            <h3>Suggested Structure</h3>
+            <canvas id="structureModel"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        function predictWaterWastage() {
+            const temperature = document.getElementById('temperature').value;
+            const rainfall = document.getElementById('rainfall').value;
+            const geographicalArea = document.getElementById('geographicalArea').value;
+            const retentionCapacity = document.getElementById('retentionCapacity').value;
+
+            if (temperature && rainfall && geographicalArea && retentionCapacity) {
+                // Simulate prediction logic (replace with actual backend call)
+                const wastage = (temperature * 0.5) + (rainfall * 0.3) - (retentionCapacity * 0.2);
+
+                const suggestion = {
+                    urban: "Rainwater Harvesting Tank",
+                    rural: "Check Dams",
+                    coastal: "Desalination Plant",
+                    arid: "Drip Irrigation System"
+                }[geographicalArea];
+
+                document.getElementById('predictionMessage').innerText = `Predicted water wastage: ${wastage.toFixed(2)} liters. Suggested structure: ${suggestion}`;
+                document.getElementById('output').style.display = 'block';
+
+                render3DModel(suggestion);
+            } else {
+                alert('Please fill all fields.');
+            }
+        }
+
+        function render3DModel(structure) {
+            const canvas = document.getElementById('structureModel');
+            const renderer = new THREE.WebGLRenderer({ canvas });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.9, 10000);
+
+            const geometry = new THREE.BoxGeometry(); // Placeholder geometry
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const cube = new THREE.Mesh(geometry, material);
+
+            scene.add(cube);
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+    </script>
+</body>
+</body>
+</html>
